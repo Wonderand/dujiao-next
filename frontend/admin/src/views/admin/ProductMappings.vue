@@ -1001,13 +1001,13 @@ onMounted(() => { fetchConnections(); fetchCategories(); fetchMappings() })
 
     <!-- Import Dialog -->
     <Dialog v-model:open="showImportModal" @update:open="(value: boolean) => { if (!value) closeImportModal() }">
-      <DialogScrollContent class="w-[calc(100vw-1rem)] max-w-5xl max-h-[85vh] p-4 sm:p-6" @interact-outside="(e: Event) => e.preventDefault()">
-        <DialogHeader>
+      <DialogScrollContent class="flex w-[calc(100vw-1rem)] max-w-5xl max-h-[85dvh] flex-col overflow-hidden p-4 sm:p-6" @interact-outside="(e: Event) => e.preventDefault()">
+        <DialogHeader class="shrink-0">
           <DialogTitle>{{ t('productMappings.importTitle') }}</DialogTitle>
         </DialogHeader>
-        <div class="space-y-5">
+        <div class="-m-1 flex min-h-0 flex-1 flex-col gap-5 overflow-hidden p-1">
           <!-- Connection selector + view mode toggle -->
-          <div class="flex flex-col gap-4 lg:flex-row lg:items-end">
+          <div class="flex shrink-0 flex-col gap-4 lg:flex-row lg:items-end">
             <div class="min-w-[200px] flex-1">
               <label class="mb-1.5 block text-xs font-medium text-muted-foreground">{{ t('productMappings.import.selectConnection') }}</label>
               <Select v-model="importConnectionId">
@@ -1033,7 +1033,7 @@ onMounted(() => { fetchConnections(); fetchCategories(); fetchMappings() })
           </div>
 
           <!-- Category options: auto-create + local category selector -->
-          <div v-if="importConnectionId" class="flex flex-col gap-4 lg:flex-row lg:items-end">
+          <div v-if="importConnectionId" class="flex shrink-0 flex-col gap-4 lg:flex-row lg:items-end">
             <div v-if="importViewMode === 'category' && upstreamCategoriesSupported" class="flex items-center gap-2">
               <Switch id="auto-create-cat" v-model="autoCreateCategory" />
               <Label for="auto-create-cat" class="text-xs font-medium text-muted-foreground cursor-pointer">{{ t('productMappings.import.autoCreateCategory') }}</Label>
@@ -1059,11 +1059,11 @@ onMounted(() => { fetchConnections(); fetchCategories(); fetchMappings() })
           </div>
 
           <!-- ===== Category View Mode ===== -->
-          <div v-if="importViewMode === 'category' && upstreamCategoriesSupported" class="rounded-lg border border-border overflow-hidden">
+          <div v-if="importViewMode === 'category' && upstreamCategoriesSupported" class="min-h-0 flex-1 overflow-y-auto rounded-lg border border-border">
             <div v-if="!importConnectionId" class="px-6 py-12 text-center text-sm text-muted-foreground">{{ t('productMappings.import.selectConnectionFirst') }}</div>
             <div v-else-if="loadingUpstream || loadingUpstreamCategories" class="px-6 py-12 text-center text-sm text-muted-foreground">{{ t('productMappings.import.upstreamProductLoading') }}</div>
             <div v-else-if="categoryDisplayList.length === 0" class="px-6 py-12 text-center text-sm text-muted-foreground">{{ t('productMappings.import.noUpstreamProducts') }}</div>
-            <div v-else class="divide-y divide-border max-h-[55vh] overflow-y-auto">
+            <div v-else class="divide-y divide-border">
               <div v-if="loadingCategoryCounts || categoryCountsFailed" class="px-4 py-2 text-xs text-muted-foreground">
                 {{ t(loadingCategoryCounts ? 'productMappings.import.categoryCountsLoading' : 'productMappings.import.categoryCountsFailed') }}
               </div>
@@ -1141,7 +1141,7 @@ onMounted(() => { fetchConnections(); fetchCategories(); fetchMappings() })
           </div>
 
           <!-- ===== Flat List View Mode ===== -->
-          <div v-if="importViewMode === 'flat' || !upstreamCategoriesSupported" class="rounded-lg border border-border overflow-hidden">
+          <div v-if="importViewMode === 'flat' || !upstreamCategoriesSupported" class="min-h-0 flex-1 overflow-y-auto rounded-lg border border-border">
             <div v-if="!importConnectionId" class="px-6 py-12 text-center text-sm text-muted-foreground">{{ t('productMappings.import.selectConnectionFirst') }}</div>
             <div v-else-if="loadingUpstream" class="px-6 py-12 text-center text-sm text-muted-foreground">{{ t('productMappings.import.upstreamProductLoading') }}</div>
             <div v-else-if="upstreamProducts.length === 0" class="px-6 py-12 text-center text-sm text-muted-foreground">{{ t('productMappings.import.noUpstreamProducts') }}</div>
@@ -1150,7 +1150,7 @@ onMounted(() => { fetchConnections(); fetchCategories(); fetchMappings() })
                 <Checkbox :model-value="allSelected ? true : (selectedProductIds.size > 0 ? 'indeterminate' : false)" @update:model-value="toggleSelectAll" />
                 <span class="text-xs font-medium text-muted-foreground">{{ t('productMappings.import.selectAll') }} ({{ upstreamProducts.length }}/{{ upstreamTotal }})</span>
               </div>
-              <div class="divide-y divide-border max-h-[50vh] overflow-y-auto">
+              <div class="divide-y divide-border">
                 <div v-for="product in upstreamProducts" :key="product.id" class="transition-colors" :class="[selectedProductIds.has(product.id) ? 'bg-primary/5' : '', mappedUpstreamIds.has(product.id) ? 'opacity-50' : '']">
                   <div class="flex items-center gap-3 px-4 py-3" :class="mappedUpstreamIds.has(product.id) ? 'cursor-not-allowed' : 'cursor-pointer hover:bg-muted/20'" @click="toggleProduct(product.id)">
                     <div @click.stop>
@@ -1216,8 +1216,9 @@ onMounted(() => { fetchConnections(); fetchCategories(); fetchMappings() })
             </div>
           </div>
 
+        </div>
           <!-- Footer: selected count + action buttons -->
-          <div class="flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex shrink-0 flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
             <span v-if="selectedProductIds.size > 0" class="text-sm text-muted-foreground">{{ t('productMappings.import.selectedCount', { count: selectedProductIds.size }) }}</span>
             <span v-else />
             <div class="flex flex-col-reverse gap-3 sm:flex-row">
@@ -1227,7 +1228,6 @@ onMounted(() => { fetchConnections(); fetchCategories(); fetchMappings() })
               </Button>
             </div>
           </div>
-        </div>
       </DialogScrollContent>
     </Dialog>
   </div>

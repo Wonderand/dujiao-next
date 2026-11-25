@@ -545,9 +545,9 @@ onMounted(() => {
               </div>
               <div>
                 <label class="mb-1.5 block text-xs font-medium text-muted-foreground">{{ t('siteConnections.form.priceMarkupPercent') }}</label>
-                <div class="relative">
-                  <Input v-model.number="form.price_markup_percent" type="number" step="0.01" min="0" placeholder="0" />
-                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">%</span>
+                <div class="flex items-center gap-2">
+                  <Input v-model.number="form.price_markup_percent" type="number" step="0.01" min="0" placeholder="0" class="flex-1" />
+                  <span class="shrink-0 text-xs text-muted-foreground">%</span>
                 </div>
                 <p class="mt-1 text-xs text-muted-foreground">{{ t('siteConnections.form.priceMarkupPercentHint') }}</p>
               </div>
@@ -599,15 +599,16 @@ onMounted(() => {
               <div v-else-if="categoryRows.length > 0" class="mt-2 max-h-64 divide-y divide-border overflow-y-auto rounded-lg border border-border">
                 <div v-for="row in categoryRows" :key="row.category.id" class="flex items-center gap-3 px-3 py-2">
                   <span class="min-w-0 flex-1 truncate text-sm text-foreground" :style="{ paddingLeft: `${row.depth * 16}px` }">{{ getLocalizedText(row.category.name) }}</span>
-                  <div class="relative w-32 shrink-0">
+                  <div class="flex w-32 shrink-0 items-center gap-2">
                     <Input
                       v-model.number="categoryMarkupInputs[String(row.category.id)]"
                       type="number"
                       step="0.01"
                       min="0"
+                      class="flex-1"
                       :placeholder="t('siteConnections.form.categoryMarkupsDefaultPlaceholder')"
                     />
-                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">%</span>
+                    <span class="shrink-0 text-xs text-muted-foreground">%</span>
                   </div>
                 </div>
               </div>
